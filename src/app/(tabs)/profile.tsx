@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
-import EditScreenInfo from '@/src/components/EditScreenInfo';
 import { Text, View } from '@/src/components/Themed';
+import Button from '@/src/components/Button';
+import { FIREBASE_AUTH } from '@/firebase.config';
 
 export default function ProfileScreen() {
   return (
@@ -8,6 +9,13 @@ export default function ProfileScreen() {
       <Text style={styles.title}>Profile</Text>
       <View style={styles.separator} lightColor='#eee' darkColor='rgba(255,255,255,0.1)' />
       <Text>Profile Screen</Text>
+
+      <Button
+        text='Log out'
+        onPress={() => {
+          FIREBASE_AUTH.signOut();
+        }}
+      />
     </View>
   );
 }
