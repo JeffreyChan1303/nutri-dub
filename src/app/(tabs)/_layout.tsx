@@ -29,13 +29,22 @@ export default function TabLayout() {
         headerShown: useClientOnlyValue(false, true)
       }}
     >
+      {/* <Tabs.Screen name='index' options={{ href: null }} /> */}
       <Tabs.Screen
         name='food'
-        options={{ title: 'Food', tabBarIcon: ({ color }) => <TabBarIcon name='cutlery' color={color} /> }}
+        options={{
+          title: 'Food',
+          headerShown: false,
+          tabBarIcon: ({ color }) => <TabBarIcon name='cutlery' color={color} />
+        }}
       />
       <Tabs.Screen
         name='search'
-        options={{ title: 'Search', tabBarIcon: ({ color }) => <TabBarIcon name='search' color={color} /> }}
+        options={{
+          title: 'Search',
+          headerShown: false,
+          tabBarIcon: ({ color }) => <TabBarIcon name='search' color={color} />
+        }}
       />
       <Tabs.Screen
         name='home'

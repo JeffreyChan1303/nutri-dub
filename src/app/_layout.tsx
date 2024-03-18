@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 
 import { useColorScheme } from '@/src/components/useColorScheme';
 import AuthProvider from '../providers/AuthProvider';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -45,18 +46,22 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
+const queryClient = new QueryClient();
+
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AuthProvider>
-        <Stack>
-          <Stack.Screen name='auth' options={{ headerShown: false }} />
-          <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-          <Stack.Screen name='modal' options={{ presentation: 'modal' }} />
-        </Stack>
-      </AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <Stack>
+            <Stack.Screen name='auth' options={{ headerShown: false }} />
+            <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+            <Stack.Screen name='modal' options={{ presentation: 'modal' }} />
+          </Stack>
+        </AuthProvider>
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }
