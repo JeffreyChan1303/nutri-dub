@@ -44,8 +44,8 @@ const FoodDetails: React.FC<FoodDetailsProps> = () => {
           <View style={styles.separator} />
           <Text style={styles.title}>Food Nutrients</Text>
 
-          {foodDetails?.data.foodNutrients.map((nutrient: any) => (
-            <View style={{ flexDirection: 'row' }}>
+          {foodDetails?.data.foodNutrients.map((nutrient: any, index: number) => (
+            <View key={index} style={{ flexDirection: 'row' }}>
               <Text style={styles.text}>
                 {nutrient.nutrient.name}: {nutrient.amount}
                 {nutrient.nutrient.unitName}
