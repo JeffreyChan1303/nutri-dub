@@ -26,9 +26,10 @@ export const getFoodList = async () => {
 };
 
 export const getFdcFoodsBySearchName = async (query: string) => {
+  const dataTypeParam = 'Survey%20%28FNDDS%29';
   try {
     const response = await api.get(
-      `foods/search?query=${query}&dataType=Branded&pageSize=50&pageNumber=0&sortOrder=asc`
+      `foods/search?query=${query}&dataType=${dataTypeParam}&pageSize=50&pageNumber=0&sortOrder=asc`
     );
     console.log(response);
     return response;
