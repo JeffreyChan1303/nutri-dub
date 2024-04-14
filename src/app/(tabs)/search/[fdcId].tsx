@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, View, Text, Image, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
 import { Stack, useLocalSearchParams, useNavigation } from 'expo-router';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { getFoodByFdcId } from '@/src/api/fdcApi';
 import { getImageByName } from '@/src/api/imageGeneratorApi';
 import { StyleSheet } from 'react-native';
@@ -33,6 +33,14 @@ const FoodDetails: React.FC<FoodDetailsProps> = () => {
     enabled: !isFoodDetailsLoading && foodDetails != null
   });
   // console.log('IMAGE: ', image?.results);
+
+  const queryClient = useQueryClient();
+  const addRecentFoodMutation = useMutation(addRecentFood, {
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries('recentFoods');
+    }
+  });
 
   if (isFoodDetailsLoading) {
     return <ActivityIndicator />;
@@ -76,10 +84,9 @@ const FoodDetails: React.FC<FoodDetailsProps> = () => {
           <Button
             title='Add to Diary'
             onPress={async () => {
-              await addRecentFood(user?.user?.email, {
-                fdcId,
-                name: foodDetails?.data?.description,
-                nutrients: foodDetails?.data?.foodNutrients
+              addRecentFoodMutation.mutate({
+                email: user?.user?.email,
+                food: { fdcId, name: foodDetails?.data?.description, nutrients: foodDetails?.data?.foodNutrients }
               });
               router.push('/(tabs)/stats');
             }}

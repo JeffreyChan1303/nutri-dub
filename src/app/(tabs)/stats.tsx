@@ -4,11 +4,13 @@ import { Text, View } from '@/src/components/Themed';
 
 import React from 'react';
 
+import Ionicons from '@expo/vector-icons/Ionicons';
+
 import { Dimensions } from 'react-native';
 import { PieChart } from 'react-native-chart-kit';
 import { useAuth } from '@/src/providers/AuthProvider';
-import { getRecentFoods } from '@/src/api/fireStoreApi';
-import { useQuery } from 'react-query';
+import { getRecentFoods, updateRecentFoods } from '@/src/api/fireStoreApi';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -23,66 +25,65 @@ const chartConfig = {
 };
 
 export default function StatsScreen() {
+  const queryClient = useQueryClient();
   const user = useAuth().user;
   const { data: recentFoods } = useQuery('recentFoods', () => getRecentFoods(user?.email), { cacheTime: 0 });
-  console.log('RECENT FOODS', recentFoods);
+  // console.log('RECENT FOODS', recentFoods);
 
-  const data = [
+  const updateRecentFoodsMutation = useMutation(updateRecentFoods, {
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries('recentFoods');
+    }
+  });
+
+  const pieChartData = [
     { name: 'Fats', grams: 36, color: 'gold', legendFontColor: '#7F7F7F', legendFontSize: 15 },
     { name: 'Carbs', grams: 135, color: 'lightblue', legendFontColor: '#7F7F7F', legendFontSize: 15 },
     { name: 'Protein', grams: 84, color: 'orange', legendFontColor: '#7F7F7F', legendFontSize: 15 }
   ];
 
-  // const data = [
-  //   {
-  //     name: 'Fats',
-  //     grams: recentFoods?.nutrients?.reduce((total: number, item: any) => {
-  //       if (item.nutrient.name === 'Total lipid (fat)') {
-  //         return total + item.amount;
-  //       }
-  //       return total;
-  //     }),
-  //     color: 'gold',
-  //     legendFontColor: '#7F7F7F',
-  //     legendFontSize: 15
-  //   },
-  //   {
-  //     name: 'Carbs',
-  //     grams: recentFoods?.nutrients?.reduce((total: number, item: any) => {
-  //       if (item.nutrient.name === 'Carbohydrate, by difference') {
-  //         return total + item.amount;
-  //       }
-  //       return total;
-  //     }),
-  //     color: 'lightblue',
-  //     legendFontColor: '#7F7F7F',
-  //     legendFontSize: 15
-  //   },
-  //   {
-  //     name: 'Protein',
-  //     grams: recentFoods?.nutrients?.reduce((total: number, item: any) => {
-  //       if (item.nutrient.name === 'Protein') {
-  //         return total + item.amount;
-  //       }
-  //       return total;
-  //     }),
-  //     color: 'orange',
-  //     legendFontColor: '#7F7F7F',
-  //     legendFontSize: 15
-  //   }
-  // ];
+  const totalCalories = recentFoods?.reduce((total: number, item: any) => {
+    const calorieIndex = item?.nutrients.findIndex((nutrient: any) => nutrient.nutrient.name === 'Energy');
+    const calorieAmount = item?.nutrients[calorieIndex]?.amount || 0;
+    return total + calorieAmount;
+  }, 0);
+  let totalFats = recentFoods?.reduce((total: number, item: any) => {
+    const fatIndex = item?.nutrients.findIndex((nutrient: any) => nutrient.nutrient.name === 'Total lipid (fat)');
+    const fatAmount = item?.nutrients[fatIndex]?.amount || 0;
+    return total + fatAmount;
+  }, 0);
+  let totalCarbs = recentFoods?.reduce((total: number, item: any) => {
+    const carbIndex = item?.nutrients.findIndex(
+      (nutrient: any) => nutrient.nutrient.name === 'Carbohydrate, by difference'
+    );
+    const carbAmount = item?.nutrients[carbIndex]?.amount || 0;
+    return total + carbAmount;
+  }, 0);
+  let totalProtein = recentFoods?.reduce((total: number, item: any) => {
+    const proteinIndex = item?.nutrients.findIndex((nutrient: any) => nutrient.nutrient.name === 'Protein');
+    const proteinAmount = item?.nutrients[proteinIndex]?.amount || 0;
+    return total + proteinAmount;
+  }, 0);
 
-  // const recentFoods = [
-  //   { name: 'Apple', calories: 95 },
-  //   { name: 'Banana', calories: 105 },
-  //   { name: 'Orange', calories: 62 }
-  // ];
+  console.log('MACROS: ', totalFats, totalCarbs, totalProtein);
+  pieChartData[0].grams = parseFloat(totalFats.toFixed(2));
+  pieChartData[1].grams = parseFloat(totalCarbs.toFixed(2));
+  pieChartData[2].grams = parseFloat(totalProtein.toFixed(2));
+
+  const handleDeleteRecentFood = (index: number) => {
+    const updatedFoods = recentFoods?.filter((_: any, i: number) => i !== index);
+    console.log('UPDATED FOODS:', updatedFoods);
+    updateRecentFoodsMutation.mutate({ email: user?.email, foods: updatedFoods });
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Macro-Nutrients Pie Chart</Text>
+      <View style={{ marginBottom: 10 }}>
+        <Text style={styles.title}>Macro-Nutrients Pie Chart</Text>
+      </View>
       <PieChart
-        data={data}
+        data={pieChartData}
         width={screenWidth}
         height={240}
         chartConfig={chartConfig}
@@ -93,21 +94,24 @@ export default function StatsScreen() {
         absolute
       />
       <View style={styles.separator} lightColor='#eee' darkColor='rgba(255,255,255,0.1)' />
-      <Text style={styles.title}>Recent Foods</Text>
+      <View style={{ marginBottom: 10 }}>
+        <Text style={styles.title}>Recent Foods</Text>
+      </View>
       <ScrollView style={{ width: '100%' }} contentContainerStyle={{ alignItems: 'center' }}>
         {recentFoods?.map((food: any, index: number) => (
-          <View style={{ padding: 8 }} key={index}>
+          <View style={{ padding: 8, flexDirection: 'row' }} key={index}>
             <Text style={styles.text}>
               {food.name}: {food.nutrients?.find((item: any) => item.nutrient.name === 'Energy').amount} calories
             </Text>
+
+            <TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteRecentFood(index)}>
+              <Ionicons name='close' size={24} color='red' />
+            </TouchableOpacity>
           </View>
         ))}
       </ScrollView>
-
-      <View style={styles.fixedItem}>
-        <TouchableOpacity style={styles.editButton}>
-          <Button title='Press Me' onPress={() => {}} />
-        </TouchableOpacity>
+      <View style={{ marginBottom: 10 }}>
+        <Text style={{ ...styles.title }}>Daily Calorie Count: {totalCalories} calories</Text>
       </View>
     </View>
   );
@@ -144,5 +148,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightgreen', // Change this to match your design
     borderRadius: 50,
     paddingHorizontal: 20
-  }
+  },
+  deleteButton: {}
 });
