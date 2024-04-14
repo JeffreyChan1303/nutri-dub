@@ -62,10 +62,13 @@ export default function TabTwoScreen() {
         <Button title='Search' onPress={() => runSearch()} />
       </View>
 
+      <View style={{ marginBottom: 5 }}>
+        <Text>Number of Entries: {foodSearch?.data.totalHits}</Text>
+      </View>
       {isFoodSearchLoading || isRefetching ? (
         <Text>Loading...</Text>
       ) : (
-        <View>
+        <View style={{ width: '90%' }}>
           <FlatList
             data={foodSearch?.data.foods}
             renderItem={({ item }) => (
@@ -80,7 +83,6 @@ export default function TabTwoScreen() {
               </View>
             )}
           />
-          <Text>Number of Entries: {foodSearch?.data.totalHits}</Text>
         </View>
       )}
     </View>

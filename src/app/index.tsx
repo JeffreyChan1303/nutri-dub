@@ -14,7 +14,7 @@ const index = () => {
   return (
     <View style={{ flex: 1, justifyContent: 'center', padding: 10 }}>
       <Text>This is the index.tsx page, supposed to redirect to the login page</Text>
-      <Redirect href={'/(tabs)/profile'} />
+      <Redirect href={'/(tabs)/home'} />
     </View>
   );
 };

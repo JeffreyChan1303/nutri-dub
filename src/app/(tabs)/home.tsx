@@ -7,22 +7,38 @@ import Button from '@/src/components/Button';
 import { Link } from 'expo-router';
 import { getImageByName } from '@/src/api/imageGeneratorApi';
 import { getFoodByFdcId, getFoodList, getFdcFoodsBySearchName } from '@/src/api/fdcApi';
-import { getUserByEmail } from '@/src/api/fireStoreApi';
+import { getRecentFoods, getUserByEmail } from '@/src/api/fireStoreApi';
+import { useAuth } from '@/src/providers/AuthProvider';
 
 export default function HomeScreen() {
+  const user = useAuth().user;
+  // const {
+  //   data: user,
+  //   isLoading: isUserLoading,
+  //   error: userError
+  // } = useQuery('user', () => getUserByEmail());
+
   const {
-    data: user,
-    isLoading: isUserLoading,
-    error: userError
-  } = useQuery('user', () => getUserByEmail('test@gmail.com'));
+    data: recentFoods,
+    isLoading: isRecentFoodsLoading,
+    error: recentFoodsError
+  } = useQuery('recentFoods', () => getRecentFoods(user?.email), { cacheTime: 0 });
+
+  // const nutrients = recentFoods?.map((food: any) => food.foodNutrients);
+  // reduce the nutrients by the energy value
+  const totalCalories = recentFoods?.reduce((total: number, item: any) => {
+    const calorieIndex = item?.nutrients.findIndex((nutrient: any) => nutrient.nutrient.name === 'Energy');
+    const calorieAmount = item?.nutrients[calorieIndex]?.amount || 0;
+    return total + calorieAmount;
+  }, 0);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome back XXX!</Text>
+      <Text style={styles.title}>Welcome back!</Text>
       <View style={styles.separator} lightColor='#eee' darkColor='rgba(255,255,255,0.1)' />
 
       <View style={{ marginBottom: 20 }}>
-        <Text style={{ ...styles.title }}>Daily Calorie Count: {user?.daily_calories} calories</Text>
+        <Text style={{ ...styles.title }}>Daily Calorie Count: {totalCalories} calories</Text>
       </View>
 
       <View style={{ flexDirection: 'row', gap: 32 }}>
@@ -75,7 +91,8 @@ const styles = StyleSheet.create({
     padding: 15,
     alignItems: 'center',
     borderRadius: 100,
-    marginVertical: 10
+    marginVertical: 10,
+    minWidth: 150
   },
   buttonText: {
     fontSize: 16,

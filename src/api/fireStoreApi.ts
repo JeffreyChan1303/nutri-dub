@@ -49,10 +49,11 @@ export async function getRecentFoods(email: string | null | undefined) {
   }
 }
 
-export async function addRecentFood(
-  email: string | null | undefined,
-  food: { fdcId: string | string[]; name: string; nutrients: any }
-) {
+export async function addRecentFood(params: {
+  email: string | null | undefined;
+  food: { fdcId: string | string[]; name: string; nutrients: any };
+}) {
+  const { email, food } = params;
   if (!email) {
     console.error('No email provided');
     return;
@@ -76,6 +77,22 @@ export async function addRecentFood(
       // create new document
       await setDoc(docRef, { recentFoods: [foodItem] });
     }
+  } catch (error) {
+    console.error(error);
+  }
+}
+export async function updateRecentFoods(params: { email: string | null | undefined; foods: any }) {
+  const { email, foods } = params;
+
+  if (!email) {
+    console.error('No email provided');
+    return;
+  }
+  try {
+    // update the recent foods
+    const docRef = doc(FIREBASE_DB, 'recent-foods', email);
+    const data = await setDoc(docRef, { recentFoods: foods }, { merge: true });
+    console.log(data);
   } catch (error) {
     console.error(error);
   }
