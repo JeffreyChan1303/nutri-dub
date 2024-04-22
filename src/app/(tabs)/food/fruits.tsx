@@ -1,46 +1,63 @@
-import React from 'react';
-import { StyleSheet, TextInput, View, TouchableOpacity, Image, Dimensions } from 'react-native';
-import { Text } from '@/src/components/Themed';
-import { Link } from 'expo-router';
+import React, { useState } from 'react';
+import { StyleSheet, TextInput, View, TouchableOpacity, Image, Modal, Text } from 'react-native';
 
 export default function SearchScreen() {
+  const [modalVisible, setModalVisible] = useState(false); 
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  const handleButtonPress = (imageName: string) => {
+    const imagePath = '../../../../assets/images/';
+    setSelectedImage(`${imagePath}${imageName}`);
+    setModalVisible(true); 
+  };
+
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.searchBar}
-        placeholder="Search items..."
-        onChangeText={(text) => {
-          console.log('Search query:', text);
-        }}
-      />
+      
       <View style={styles.buttonsContainer}>
         <View style={styles.buttonsGroup}>
           <View style={styles.buttonsRow}>
-            <TouchableOpacity onPress={() => console.log('Button 1 pressed')}>
+            <TouchableOpacity onPress={() => handleButtonPress('applestat.png')}>
               <Image source={require('../../../../assets/images/fruit1.jpg')} style={styles.buttonImage} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => console.log('Button 2 pressed')}>
+            <TouchableOpacity onPress={() => handleButtonPress('fruit2.jpg')}>
               <Image source={require('../../../../assets/images/fruit2.jpg')} style={styles.buttonImage} />
             </TouchableOpacity>
           </View>
           <View style={styles.buttonsRow}>
-            <TouchableOpacity onPress={() => console.log('Button 3 pressed')}>
+            <TouchableOpacity onPress={() => handleButtonPress('fruit3.jpg')}>
               <Image source={require('../../../../assets/images/fruit3.jpg')} style={styles.buttonImage} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => console.log('Button 4 pressed')}>
+            <TouchableOpacity onPress={() => handleButtonPress('fruit4.jpg')}>
               <Image source={require('../../../../assets/images/fruit4.jpg')} style={styles.buttonImage} />
             </TouchableOpacity>
           </View>
           <View style={styles.buttonsRow}>
-            <TouchableOpacity onPress={() => console.log('Button 5 pressed')}>
+            <TouchableOpacity onPress={() => handleButtonPress('fruit5.jpg')}>
               <Image source={require('../../../../assets/images/fruit5.jpg')} style={styles.buttonImage} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => console.log('Button 6 pressed')}>
+            <TouchableOpacity onPress={() => handleButtonPress('fruit6.jpg')}>
               <Image source={require('../../../../assets/images/fruit6.jpg')} style={styles.buttonImage} />
             </TouchableOpacity>
           </View>
         </View>
       </View>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            {selectedImage && <Image source={{uri: selectedImage}} style={styles.modalImage} />}
+            <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -52,14 +69,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     paddingTop: 50,
     paddingHorizontal: 20,
-  },
-  searchBar: {
-    width: '100%',
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    marginBottom: 0,
   },
   buttonsContainer: {
     flex: 1,
@@ -80,6 +89,32 @@ const styles = StyleSheet.create({
     height: 180,
     width: 180,
     borderRadius: 20,
-    marginHorizontal: 10, // Add horizontal margin to create space between buttons
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 20,
+    alignItems: 'center',
+  },
+  modalImage: {
+    height: 300,
+    width: 300,
+    borderRadius: 20,
+  },
+  closeButton: {
+    marginTop: 20,
+    backgroundColor: '#2196F3',
+    padding: 10,
+    borderRadius: 10,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });

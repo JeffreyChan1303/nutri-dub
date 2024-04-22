@@ -6,13 +6,6 @@ import { Link } from 'expo-router';
 export default function SearchScreen() {
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.searchBar}
-        placeholder="Search items..."
-        onChangeText={(text) => {
-          console.log('Search query:', text);
-        }}
-      />
       <View style={styles.buttonsContainer}>
         <View style={styles.buttonsGroup}>
           <View style={styles.buttonsRow}>
