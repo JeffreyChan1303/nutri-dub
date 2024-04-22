@@ -9,28 +9,40 @@ export default function SearchScreen() {
       <View style={styles.buttonsContainer}>
         <View style={styles.buttonsGroup}>
           <View style={styles.buttonsRow}>
-            <TouchableOpacity onPress={() => console.log('Button 1 pressed')}>
-              <Image source={require('../../../../assets/images/dairy1.jpg')} style={styles.buttonImage} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => console.log('Button 2 pressed')}>
-              <Image source={require('../../../../assets/images/dairy2.jpg')} style={styles.buttonImage} />
-            </TouchableOpacity>
+            <Link href='/(tabs)/search/2340823' asChild>
+              <TouchableOpacity onPress={() => console.log('Button 1 pressed')}>
+                <Image source={require('../../../../assets/images/dairy1.jpg')} style={styles.buttonImage} />
+              </TouchableOpacity>
+            </Link>
+            <Link href='/(tabs)/search/2341173' asChild>
+              <TouchableOpacity onPress={() => console.log('Button 2 pressed')}>
+                <Image source={require('../../../../assets/images/dairy2.jpg')} style={styles.buttonImage} />
+              </TouchableOpacity>
+            </Link>
           </View>
           <View style={styles.buttonsRow}>
-            <TouchableOpacity onPress={() => console.log('Button 3 pressed')}>
-              <Image source={require('../../../../assets/images/dairy3.jpg')} style={styles.buttonImage} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => console.log('Button 4 pressed')}>
-              <Image source={require('../../../../assets/images/dairy4.jpg')} style={styles.buttonImage} />
-            </TouchableOpacity>
+          <Link href='/(tabs)/search/2345704' asChild>
+              <TouchableOpacity onPress={() => console.log('Button 3 pressed')}>
+                <Image source={require('../../../../assets/images/dairy3.jpg')} style={styles.buttonImage} />
+              </TouchableOpacity>
+            </Link>
+            <Link href='/(tabs)/search/2341000' asChild>
+              <TouchableOpacity onPress={() => console.log('Button 4 pressed')}>
+                <Image source={require('../../../../assets/images/dairy4.jpg')} style={styles.buttonImage} />
+              </TouchableOpacity>
+            </Link>
           </View>
           <View style={styles.buttonsRow}>
-            <TouchableOpacity onPress={() => console.log('Button 5 pressed')}>
-              <Image source={require('../../../../assets/images/dairy5.jpg')} style={styles.buttonImage} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => console.log('Button 6 pressed')}>
-              <Image source={require('../../../../assets/images/dairy6.jpg')} style={styles.buttonImage} />
-            </TouchableOpacity>
+          <Link href='/(tabs)/search/2340762' asChild>
+              <TouchableOpacity onPress={() => console.log('Button 5 pressed')}>
+                <Image source={require('../../../../assets/images/dairy5.jpg')} style={styles.buttonImage} />
+              </TouchableOpacity>
+            </Link>
+            <Link href='/(tabs)/search/2341033' asChild>
+              <TouchableOpacity onPress={() => console.log('Button 6 pressed')}>
+                <Image source={require('../../../../assets/images/dairy6.jpg')} style={styles.buttonImage} />
+              </TouchableOpacity>
+            </Link>
           </View>
         </View>
       </View>
