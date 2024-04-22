@@ -43,7 +43,7 @@ export default function HomeScreen() {
 
       <View style={{ flexDirection: 'row', gap: 32 }}>
         <View>
-          <Link href='/(tabs)/home' asChild>
+          <Link href='/(tabs)/food' asChild>
             <TouchableOpacity style={styles.button}>
               <Text style={styles.buttonText}>Food</Text>
             </TouchableOpacity>
@@ -55,12 +55,12 @@ export default function HomeScreen() {
           </Link>
         </View>
         <View>
-          <Link href='/(tabs)/home' asChild>
+          <Link href='/(tabs)/profile/rewards' asChild>
             <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Health Score</Text>
+              <Text style={styles.buttonText}>Rewards</Text>
             </TouchableOpacity>
           </Link>
-          <Link href='/(tabs)/home' asChild>
+          <Link href='/(tabs)/profile/daily' asChild>
             <TouchableOpacity style={styles.button}>
               <Text style={styles.buttonText}>Daily Login</Text>
             </TouchableOpacity>
