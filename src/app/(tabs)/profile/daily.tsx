@@ -27,15 +27,9 @@ const DailyLoginScreen = ({ navigation }: any) => {
           <View key={index} style={styles.dayBox}>
             <Text style={styles.dayText}>{item.day}</Text>
             {item.checked ? (
-              <Image
-                style={styles.checkmark}
-                source={require('/Users/jeffreychan/cs_hw/uni_year_three/nutri-dub/assets/ryhanImg/checkmark.png')}
-              />
+              <Image style={styles.checkmark} source={require('../../../../assets/ryhanImg/checkmark.png')} />
             ) : index + 1 === daysLoggedIn ? (
-              <Image
-                style={styles.checkmark}
-                source={require('/Users/jeffreychan/cs_hw/uni_year_three/nutri-dub/assets/ryhanImg/loginReward.png')}
-              />
+              <Image style={styles.checkmark} source={require('../../../../assets/ryhanImg/loginReward.png')} />
             ) : null}
           </View>
         ))}
